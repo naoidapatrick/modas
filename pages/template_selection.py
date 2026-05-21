@@ -1,5 +1,4 @@
 import streamlit as st
-from st_clickable_images import clickable_images
 from shared import setup_page, score_templates
 import pandas as pd
 import html
@@ -126,89 +125,21 @@ if "data" in st.session_state and st.session_state.data:
             unsafe_allow_html=True,
         )
 
-if "last_clicked_row_1" not in st.session_state:
-    st.session_state.last_clicked_row_1 = -1
-if "last_clicked_row_2" not in st.session_state:
-    st.session_state.last_clicked_row_2 = -1
+cols1 = st.columns(3, gap="large")
+for i, tpl in enumerate(templates_first_row):
+    with cols1[i]:
+        st.image(tpl["img_file"], use_container_width=True)
+        if st.button(tpl["label"], key=f"tpl_row1_{i}", use_container_width=True):
+            st.session_state.preview_template = tpl["key"]
+            st.rerun()
 
-clicked1 = clickable_images(
-    [t["img_url"] for t in templates_first_row],
-    titles=[t["label"] for t in templates_first_row],
-    div_style={
-        "display": "grid",
-        "gridTemplateColumns": "repeat(3, 1fr)",
-        "gap": "50px",
-        "margin": "0 5vw",
-        "padding-top": "40px",
-        "padding-bottom": "10px",
-    },
-    img_style={
-        "width": "90%",
-        "height": "fit-content",
-        "objectFit": "cover",
-        "borderRadius": "12px",
-        "boxShadow": "0 2px 6px rgba(0,0,0,0.14)",
-        "cursor": "pointer",
-    },
-    key="templates_row_1",
-)
-
-if clicked1 > -1 and clicked1 != st.session_state.last_clicked_row_1:
-    st.session_state.last_clicked_row_1 = clicked1
-    st.session_state.preview_template = templates_first_row[clicked1]["key"]
-
-st.markdown(
-    """
-    <div class="template-caption-grid">
-    """
-    + "".join(
-        f'<div class="template-caption">{t["label"]}</div>' for t in templates_first_row
-    )
-    + """
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-clicked2 = clickable_images(
-    [t["img_url"] for t in templates_second_row],
-    titles=[t["label"] for t in templates_second_row],
-    div_style={
-        "display": "grid",
-        "gridTemplateColumns": "repeat(3, 1fr)",
-        "gap": "50px",
-        "margin": "0 5vw",
-        "padding-bottom": "10px",
-    },
-    img_style={
-        "width": "90%",
-        "height": "fit-content",
-        "objectFit": "cover",
-        "borderRadius": "12px",
-        "boxShadow": "0 2px 6px rgba(0,0,0,0.14)",
-        "cursor": "pointer",
-        "filter": "grayscale(1)",
-    },
-    key="templates_row_2",
-)
-
-if clicked2 > -1 and clicked2 != st.session_state.last_clicked_row_2:
-    st.session_state.last_clicked_row_2 = clicked2
-    st.session_state.preview_template = templates_second_row[clicked2]["key"]
-
-st.markdown(
-    """
-    <div class="template-caption-grid">
-    """
-    + "".join(
-        f'<div class="template-caption">{t["label"]}</div>'
-        for t in templates_second_row
-    )
-    + """
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+cols2 = st.columns(3, gap="large")
+for i, tpl in enumerate(templates_second_row):
+    with cols2[i]:
+        st.image(tpl["img_file"], use_container_width=True)
+        if st.button(tpl["label"], key=f"tpl_row2_{i}", use_container_width=True):
+            st.session_state.preview_template = tpl["key"]
+            st.rerun()
 
 
 template_by_key_all = {
