@@ -9,7 +9,7 @@ if not _RELEASE:
         url="http://localhost:5173",
     )
 else:
-    _build_dir = os.path.join(os.path.dirname(__file__), "../../dist")
+    _build_dir = os.path.join(os.path.dirname(__file__), "../dist")
     _component = components.declare_component("story_viewer", path=_build_dir)
 
 

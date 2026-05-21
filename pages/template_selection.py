@@ -166,14 +166,8 @@ if preview_key and preview_key in template_by_key_all:
         left, right = st.columns([1.15, 1], gap="large")
 
         with left:
-            st.markdown(
-                f"""
-                <div class="gif-top-align">
-                    <img src="{tpl["gif_file"]}" alt="Preview GIF">
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            gif_local = tpl["gif_file"].replace("/app/static/", "static/")
+            st.image(gif_local, use_container_width=True)
 
         with right:
             st.markdown(
