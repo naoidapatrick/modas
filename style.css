@@ -1,0 +1,430 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Albert Sans', sans-serif;
+    font-style: normal;
+}
+
+.stMainBlockContainer {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.stVerticalBlock {
+    gap: 0;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+}
+
+.st-emotion-cache-tn0cau {
+    gap: 0;
+}
+
+iframe[title="components.story_viewer"] {
+    position: fixed;
+    top: 10vh;
+    height: 90vh;
+}
+
+div[data-testid="stMarkdownContainer"] {
+    margin: 0;
+}
+
+div[data-testid="stColumn"]:has(.left-container) {
+    width: 100%;
+    padding: 0 4vw;
+}
+
+div[data-testid="stFileUploader"] section {
+    border: 2px dashed #010080;
+    border-radius: 15px;
+    background-color: #F3F3F3;
+    margin-top: -20px;
+}
+
+.right-container {
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.left-container h1 {
+    color: #010080;
+    font-size: 32px;
+}
+
+.left-container h3 {
+    margin: 4vh 0 0 0;
+    font-size: 24px;
+}
+
+.left-container p {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.explore-link {
+    text-align: center;
+    padding-bottom: 2vh;
+}
+
+.explore-link a {
+    text-decoration: none;
+    color: #010080;
+    font-weight: 700;
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 10vh;
+    background: #F3F3F3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 2px solid #010080;
+    gap: 35px;
+    z-index: 1000;
+}
+
+.top-bar a {
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.top-bar a.active {
+    color: #010080;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.top-bar-left {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-right a {
+    color: #010080;
+    font-weight: 700;
+    border: 2px solid #010080;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.40);
+}
+
+.top-bar-action {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: none;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.template-page-instructions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 14vh 5vw 0 5vw;
+    /* margin: 4vh 5vw 0 5vw; */
+}
+
+.template-page-instructions p,
+.template-page-instructions h4 {
+    color: black;
+    font-style: normal;
+    line-height: normal;
+}
+
+.template-page-instructions p {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.template-page-instructions span {
+    font-weight: 700;
+}
+
+.template-page-instructions h4 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* added for test */
+[data-testid="stVerticalBlock"]:has(.template-page-instructions),
+[data-testid="stVerticalBlock"]:has(.template-caption-grid) {
+    justify-content: flex-start !important;
+    gap: 0 !important;
+}
+
+.info-btn {
+    position: relative;
+    padding: 8px 16px;
+    font-weight: 500;
+    line-height: normal;
+    border: 2.5px dotted #010080;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.info-tooltip {
+    position: absolute;
+    width: 250%;
+    background: #f0f0ff;
+    color: #010080;
+    padding: 12px 14px;
+    top: calc(100% + 8px);
+    right: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0;
+    border-radius: 10px;
+    border: 1.5px solid #010080;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    z-index: 999;
+}
+
+.template-page-instructions .info-btn span {
+    font-weight: 500 !important;
+    text-align: left;
+}
+
+.info-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 16px;
+}
+
+.info-btn:hover .info-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.template-caption-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    margin: 0px 5vw 30px 5vw;
+}
+
+.template-caption {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    text-align: left;
+}
+
+/* Base style for Streamlit buttons */
+div.stButton>button {
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    transition: all 120ms ease;
+}
+
+/* Disabled state */
+div.stButton>button:disabled {
+    background: #9D9D9D;
+    color: #ffffff;
+    padding: 16px 28px;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+/* Enabled state */
+div.stButton>button:not(:disabled) {
+    background: #010080;
+    box-shadow: 1.5px 1.5px 5px 0 rgba(0, 0, 0, 0.40);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+button[data-testid="stBaseButton-secondary"] {
+    background: #010080;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.40);
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+button[data-testid="stBaseButton-secondary"]:hover {
+    background: #010080;
+    color: #fff;
+}
+
+/* browse button */
+[data-testid="stFileUploader"] button[data-testid="stBaseButton-secondary"] {
+    color: transparent !important;
+    position: relative;
+    min-width: 210px !important;
+}
+
+[data-testid="stFileUploader"] button[data-testid="stBaseButton-secondary"]::after {
+    content: var(--label-button);
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+    visibility: visible;
+}
+
+/* instructions */
+[data-testid="stFileUploaderDropzoneInstructions"] div>span:nth-child(1) {
+    visibility: hidden;
+    display: block;
+    line-height: 0;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] div>span:nth-child(1)::after {
+    content: var(--label-instructions);
+    visibility: visible;
+    display: block;
+    line-height: normal;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+/* limits */
+[data-testid="stFileUploaderDropzoneInstructions"] div>span:nth-child(2) {
+    visibility: hidden;
+    display: block;
+    line-height: 0;
+}
+
+[data-testid="stFileUploaderDropzoneInstructions"] div>span:nth-child(2)::after {
+    content: var(--label-limits);
+    visibility: visible;
+    display: block;
+    line-height: normal;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.template-dialog-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #000;
+    margin-left: 1rem;
+}
+
+div[data-testid="stDialog"] [aria-label="dialog"] {
+    width: 80%;
+    height: fit-content;
+    padding: 2vh 3vw;
+}
+
+div[data-testid="stDialog"] h1,
+div[data-testid="stDialog"] h2,
+div[data-testid="stDialog"] h3 {
+    color: black;
+}
+
+div[aria-label="dialog"]>button[aria-label="Close"] {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background: #010080;
+    border: none;
+    filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, 0.40));
+}
+
+div[aria-label="dialog"]>button[aria-label="Close"]>svg {
+    height: 16px;
+    width: 16px;
+    color: white;
+}
+
+div[data-testid="stLayoutWrapper"]>div {
+    flex-direction: row;
+    gap: 3rem !important;
+    align-items: start;
+}
+
+div[data-testid="stLayoutWrapper"]>.stHorizontalBlock {
+    gap: 2rem !important;
+    align-items: stretch;
+}
+
+div[data-testid="stLayoutWrapper"]>.stVerticalBlock {
+    flex-direction: column;
+    gap: 2rem !important;
+}
+
+
+.template-dialog-text h3 {
+    color: #010080;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+.template-dialog-text p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #000;
+    margin-bottom: 32px;
+}
+
+div[data-testid="stDialog"] div.stButton {
+    width: fit-content !important;
+    margin-right: auto;
+    margin-left: 1rem;
+}
+
+[data-testid="stVerticalBlock"]:has(.gif-top-align) {
+    justify-content: flex-start !important;
+    gap: 0 !important;
+}
+
+.gif-top-align {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    width: 100%;
+}
+
+.gif-top-align img {
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.data-recommendation {
+    width: fit-content;
+    margin: 0 5vw 16px 5vw;
+    padding: 12px 20px;
+    background: #f0f0ff;
+    border: 1.5px solid #010080;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #010080;
+}

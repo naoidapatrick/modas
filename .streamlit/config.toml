@@ -1,0 +1,15 @@
+[client]
+toolbarMode = "minimal"
+showSidebarNavigation = false
+
+[server]
+enableStaticServing = true
+
+[ui]
+hideTopBar = true
+
+[theme]
+primaryColor = "#010080"                # buttons, active states
+backgroundColor = "#F3F3F3"             # base bg
+secondaryBackgroundColor = "#9D9D9D"    # for inactive elem
+textColor = "#000000"          

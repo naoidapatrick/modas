@@ -1,0 +1,884 @@
+@import './reset.css';
+@import './variables.css';
+@import './typography.css';
+@import url('https://fonts.cdnfonts.com/css/general-sans');
+
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    font-family: 'General Sans', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.4;
+    background-attachment: fixed;
+}
+
+.story-container:has(.thuringia-app) {
+    background-image: linear-gradient(rgba(197, 176, 255, 1), rgba(255, 0, 0, 0));
+        font-family: 'General Sans', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+.story-container:has(.vrr-app) {
+    background-image: linear-gradient(rgba(255, 255, 255, 1), rgba(225, 255, 214, 1), rgba(214, 245, 255, 1));
+}
+
+.story-container:has(.dresden-app) {
+    background-image: url('../static/img/Dresden/BGTexture.svg');
+    font-family: Bedstead;
+}
+
+/******* Story Character *******/
+
+.character-wrapper {
+    position: fixed;
+    left: 24px;
+    bottom: 50px;
+    width: min(250px, 38vw);
+    height: 25vh;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    z-index: 200;
+}
+
+
+.story-character-transportation {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    transform-origin: 50% 100%;
+}
+
+
+.character-wrapper.character-wrapper--transportation-car,
+.character-wrapper.character-wrapper--transportation-bus {
+    width: min(400px, 45vw);
+}
+
+.character-wrapper--transportation-bike .story-character-transportation {
+    animation: ride 2500ms both infinite ease-in-out;
+}
+
+@keyframes ride {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    20% {
+        transform: scaleY(0.95);
+    }
+
+    40% {
+        transform: scaleY(1.01);
+    }
+
+    60% {
+        transform: scaleY(0.98);
+    }
+
+    80% {
+        transform: scaleY(1.01);
+    }
+}
+
+.character-wrapper.character-wrapper--transportation-car .story-character-transportation,
+.character-wrapper.character-wrapper--transportation-bus .story-character-transportation {
+    animation: car-ride 1500ms both infinite linear;
+}
+
+@keyframes car-ride {
+
+    0%,
+    100% {
+        transform: scaleY(1) rotate(0deg);
+    }
+
+    20% {
+        transform: scaleY(0.98) rotate(0.5deg);
+    }
+
+    40% {
+        transform: scaleY(1.02) rotate(-0.5deg);
+    }
+
+    60% {
+        transform: scaleY(0.98) rotate(0.5deg);
+    }
+
+    80% {
+        transform: scaleY(1.02) rotate(-0.5deg);
+    }
+}
+
+.character-wrapper.character-wrapper--transportation-walk .story-character-transportation {
+    animation: walk 3500ms both infinite linear;
+}
+
+@keyframes walk {
+
+    0%,
+    100% {
+        transform: scaleY(1) rotate(0deg);
+    }
+
+    20% {
+        transform: scaleY(0.99) rotate(0.2deg);
+    }
+
+    40% {
+        transform: scaleY(1.01) rotate(-0.2deg);
+    }
+
+    60% {
+        transform: scaleY(0.99) rotate(0.2deg);
+    }
+
+    80% {
+        transform: scaleY(1.01) rotate(-0.2deg);
+    }
+}
+
+
+
+.speech-bubble {
+    padding: 24px;
+    border-radius: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fff;
+    min-width: 200px;
+    width: max-content;
+    max-width: 28vw;
+    transform: translate3d(90%, -100%, 0);
+
+    font-size: 1rem;
+}
+
+.speech-bubble:has(ul) {
+    min-width: 200px;
+    width: max-content;
+    max-width: 40vw;
+}
+
+
+.speech-bubble p,
+.speech-bubble ul li {
+    font-size: 1.2rem;
+}
+
+.speech-bubble .speech-bubble-bottom {
+    position: absolute;
+    bottom: 0px;
+    left: 20px;
+    width: 100px;
+    transform: translate3d(0%, 80%, 0);
+    z-index: 0;
+}
+
+
+
+.white-info-box {
+    position: absolute;
+    top: 10vh;
+    left: 50%;
+    padding: 24px;
+    border-radius: 20px;
+    background: #fff;
+    width: max(400px, 60vw);
+
+    z-index: 20;
+
+    opacity: 0;
+    transform: translate3d(-50%, 0, 0) scaleX(0);
+    transition: 400ms all cubic-bezier(.43, -0.31, .74, 1.43);
+}
+
+/**** Story ***/
+
+.choose-transportation-section,
+.choose-city-section,
+.scrollying-section>section[data-story-section] {
+    position: relative;
+    background: url('@img/Dresden/road.png') repeat-x 0 100%;
+    background-size: auto 50px;
+}
+
+.building-image-wrapper {
+    position: absolute;
+    bottom: 30px;
+    right: 15vw;
+    width: 14vw;
+    height: 100%;
+    max-height: 85vh;
+}
+
+.building-image-wrapper img {
+    width: 100%;
+    height: 100%;
+}
+
+.building-image-wrapper ul {
+    position: absolute;
+    top: 16%;
+    bottom: 12%;
+    z-index: 20;
+    width: 80%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.building-image-wrapper ul li {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    /* background: rgba(255, 255, 255, 0.9); */
+    display: grid;
+    place-content: center;
+}
+
+
+.building-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.building-metrics-list {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.building-metrics-list__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    font-family: var(--font-family-display);
+    font-size: clamp(1.25rem, 1.8vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--black);
+
+    z-index: 1;
+}
+
+
+
+/**** Treeeeeeeees ***/
+
+.safety-section {
+    width: 100vw;
+}
+
+.trees-wrapper {
+    position: absolute;
+    bottom: 30px;
+    right: 0vw;
+    height: 54vh;
+    width: 70%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.tree-wrapper {
+    position: relative;
+    margin-left: -10px;
+}
+
+.tree-wrapper .tree {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.8;
+}
+
+.tree-value {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate3d(-50%, -50%, 0);
+    margin: 0;
+    white-space: nowrap;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.1em;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    -webkit-text-stroke: 2.5px var(--black);
+}
+
+.tree-value--taupe-light {
+    color: var(--taupe-light);
+}
+
+.tree-value--blue {
+    color: var(--blue);
+}
+
+.tree-value--mint {
+    color: var(--mint);
+}
+
+.tree-value--yellow {
+    color: var(--yellow);
+}
+
+.tree-value--orange-soft {
+    color: var(--orange-soft);
+}
+
+.tree-value--orange-light {
+    color: var(--orange-light);
+}
+
+.tree-wrapper--no-answer .tree-value {
+    top: 40%;
+}
+
+.tree-wrapper--very-safe .tree-value {
+    top: 50%;
+}
+
+
+
+.trees-info {
+    max-width: 70%;
+    transform: translate3d(-50%, -100%, 0) scaleX(0);
+}
+
+
+
+/****** traffic-light / clouds ******/
+
+.others-question-section {
+    position: relative;
+}
+
+.others-answers-section {
+    position: relative;
+}
+
+.traffic-light-wrapper {
+    position: absolute;
+    bottom: 30px;
+    right: 10vw;
+    height: 40vh;
+}
+
+.traffic-light-wrapper:after {
+    display: block;
+    position: absolute;
+    content: "";
+    top: 11vh;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #90ff3e;
+    filter: blur(10px);
+    transform: translate3d(-50%, 0%, 0);
+}
+
+.traffic-light {
+    max-height: 100%;
+}
+
+
+.others-question-section .cloud-image {
+    position: absolute;
+    top: 25vh;
+    left: 0%;
+    max-height: 150px;
+    height: 15vh;
+}
+
+.others-question-section .cloud-image.cloud-2 {
+    position: absolute;
+    top: 15vh;
+    left: 0%;
+}
+
+.others-question-section .cloud-info-box {
+    top: 15vh;
+    left: 55vw;
+    width: max-content;
+    max-width: 40vw;
+    transform: none;
+}
+
+.others-answers-section .cloud-image {
+    position: absolute;
+    width: min(22rem, 24vw);
+    left: 4vw;
+    top: 34vh;
+}
+
+
+
+/******* other answers section ********/
+
+.others-answers-section .white-info-box {
+    width: min(42rem, 50vw);
+    left: auto;
+    transform: none;
+}
+
+.info-box-top {
+    top: 5vh;
+    left: 5vw;
+}
+
+.info-box-bottom {
+    top: 38vh;
+    right: 6vw;
+}
+
+.others-answers-section .info-box-top {
+    right: 16vw;
+}
+
+.others-answers-section .info-box-bottom {
+    right: 10vw;
+}
+
+
+/******* conclusion section ********/
+
+.conclusion-section {
+    width: 150vw;
+    flex: 0 0 150vw !important;
+    position: relative;
+}
+
+.conclusion-summary-box {
+    top: 6vh;
+    left: auto;
+    right: 5vw;
+    width: min(48rem, 52vw);
+    transform: none;
+}
+
+.conclusion-summary-box.white-info-box {
+    opacity: 1;
+}
+
+.conclusion-transport-list {
+    position: absolute;
+    left: 35vw;
+    right: 0vw;
+    bottom: 30px;
+    width: auto;
+    height: 100%;
+}
+
+.conclusion-section .conclusion-transport-list__item {
+    position: absolute;
+    bottom: 0;
+}
+
+
+/******* end section ********/
+
+.end-section {
+    position: relative;
+}
+
+.end-cta-card {
+    position: absolute;
+    top: 14vh;
+    right: 10vw;
+    width: 50ch;
+    padding: 2rem 2.25rem 1.5rem;
+    border-radius: 20px;
+    background: white;
+}
+
+.end-cta-card h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: none;
+    text-align: left;
+}
+
+.end-cta-card__button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1.1rem 1.4rem;
+    border: 4px solid var(--black);
+    border-radius: 16px;
+    background: var(--blue-dark);
+    color: white;
+    cursor: pointer;
+}
+
+.end-cta-card__button span {
+    font-family: var(--font-family-pixel);
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+}
+
+.end-cta-card__arrow {
+    width: 3rem;
+    height: auto;
+    filter: brightness(0) invert(1);
+}
+
+
+
+
+
+/*********** STORY ANIMATION **********/
+
+/*** speech bubble **/
+.speech-bubble {
+    transform-origin: 0% 100%;
+    transition: 400ms all cubic-bezier(.43, -0.31, .74, 1.43);
+}
+
+.character-wrapper--safety .speech-bubble {
+    max-width: 32vw;
+}
+
+.character-wrapper:not(.active-100) .speech-bubble {
+    transform: translate3d(90%, -100%, 0) scaleY(0);
+}
+
+.character-wrapper.character-wrapper--conclusion.active-60 .speech-bubble {
+    transform: translate3d(90%, -100%, 0) scaleY(1);
+}
+
+
+
+
+/**** Building animation ***/
+.building-image-wrapper {
+    transform-origin: 0 100%;
+    transition: 400ms all cubic-bezier(.43, -0.31, .74, 1.43);
+    transition-delay: 300ms;
+
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scaleY(0);
+}
+
+
+.building-image-wrapper ul li {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+    transition: 200ms all ease-in-out;
+
+    transition-delay: 400ms;
+}
+
+.building-image-wrapper ul li:nth-child(2) {
+    transition-delay: 600ms;
+}
+
+.building-image-wrapper ul li:nth-child(3) {
+    transition-delay: 800ms;
+}
+
+.building-image-wrapper ul li:nth-child(4) {
+    transition-delay: 1000ms;
+}
+
+.building-image-wrapper ul li:nth-child(5) {
+    transition-delay: 1200ms;
+}
+
+.building-image-wrapper ul li:nth-child(6) {
+    transition-delay: 1400ms;
+}
+
+
+/* accessibility-happiness section */
+
+.accessibility-happiness-section.story-section--active .building-image-wrapper {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleY(1);
+}
+
+
+.accessibility-happiness-section.story-section--active .building-image-wrapper ul li {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+}
+
+
+
+
+
+
+/* accessibility-road section */
+
+.accessibility-road-section.story-section--active .building-image-wrapper {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleY(1);
+}
+
+
+.accessibility-road-section.story-section--active .building-image-wrapper ul li {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+}
+
+
+
+
+/* trees - save the tree, save the bee, save the snail, save those whales 🤌 */
+
+.tree-wrapper {
+    transform-origin: 50% 100%;
+    transition: 400ms all cubic-bezier(.43, -0.31, .74, 1.43);
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.tree-wrapper:nth-child(1) {
+    width: 70%;
+}
+
+.tree-wrapper:nth-child(2) {
+    width: 25%;
+}
+
+.tree-wrapper:nth-child(3) {
+    width: 18%;
+}
+
+.tree-wrapper:nth-child(4) {
+    width: 30%;
+}
+
+.tree-wrapper:nth-child(5) {
+    width: 20%;
+}
+
+.tree-wrapper:nth-child(6) {
+    width: 35%;
+}
+
+.safety-section.story-section--active .tree-wrapper {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(1) {
+    transition-delay: 200ms;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(2) {
+    transition-delay: 400ms;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(3) {
+    transition-delay: 600ms;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(4) {
+    transition-delay: 800ms;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(5) {
+    transition-delay: 1000ms;
+}
+
+.safety-section.story-section--active .tree-wrapper:nth-child(6) {
+    transition-delay: 1200ms;
+}
+
+
+.safety-section.story-section--active .trees-info {
+    transition-delay: 1400ms;
+    transform: translate3d(-50%, -100%, 0) scaleX(1);
+    opacity: 1;
+}
+
+
+
+
+/* clouds - traffic light */
+
+.others-question-section {
+    overflow: hidden;
+}
+
+.cloud-image {
+    animation: cloud-flow 20000ms forwards linear infinite;
+}
+
+.cloud-image.cloud-2 {
+    animation: cloud-flow 19000ms forwards linear infinite 4000ms;
+}
+
+@keyframes cloud-flow {
+    0% {
+        opacity: 0;
+        transform: translate3d(-100%, 0, 0);
+    }
+
+    9%,
+    90% {
+        opacity: 0;
+    }
+
+    10%,
+    89% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(100vw, 0, 0);
+    }
+}
+
+.others-question-section.story-section--active .traffic-light-wrapper:after {
+    animation: light-pulse 1500ms both ease-in-out infinite;
+}
+
+@keyframes light-pulse {
+
+    0%,
+    100% {
+        filter: blur(10px);
+    }
+
+    50% {
+        filter: blur(5px);
+    }
+}
+
+.cloud-info-box.white-info-box {
+    transform: translate3d(-20%, 0%, 0) scaleX(0);
+    transition-delay: 400ms;
+}
+
+.others-question-section.story-section--active .cloud-info-box.white-info-box {
+    transform: translate3d(-20%, 0%, 0) scaleX(1);
+    opacity: 1;
+}
+
+
+
+/* Others answer */
+
+.others-answers-section .info-box-top,
+.others-answers-section .info-box-bottom {
+    transform: translate3d(0%, -40%, 0) scaleX(0);
+}
+
+.others-answers-section .info-box-bottom {
+    transform: translate3d(0%, 40%, 0) scaleX(0);
+}
+
+
+.others-answers-section.story-section--active .info-box-top.white-info-box {
+    transform: translate3d(0%, 0%, 0) scaleX(1);
+    opacity: 1;
+    transition-delay: 200ms;
+}
+
+.others-answers-section.story-section--active .info-box-bottom.white-info-box {
+    transform: translate3d(0%, 0%, 0) scaleX(1);
+    opacity: 1;
+    transition-delay: 600ms;
+}
+
+
+
+/* conclusion-section */
+
+.conclusion-section .conclusion-transport-list__item--tram,
+.conclusion-section .conclusion-transport-list__item--car,
+.conclusion-section .conclusion-transport-list__item--bike,
+.conclusion-section .conclusion-transport-list__item--walkers {
+    transform: translate3d(0%, 0, 0);
+    transition: all 2000ms ease-in-out;
+}
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--car.is-fully-in-view) .conclusion-transport-list__item--tram {
+    transform: translate3d(5%, 0, 0);
+}
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--walkers.is-fully-in-view) .conclusion-transport-list__item--tram {
+    transform: translate3d(10%, 0, 0);
+}
+
+
+.conclusion-section.story-section--active .conclusion-transport-list__item--car.is-fully-in-view {
+    transform: translate3d(15%, 0, 0);
+}
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--walkers.is-fully-in-view) .conclusion-transport-list__item--car {
+    transform: translate3d(20%, 0, 0);
+}
+
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--car.is-fully-in-view) .conclusion-transport-list__item--bike {
+    transform: translate3d(5%, 0, 0);
+}
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--walkers.is-fully-in-view) .conclusion-transport-list__item--bike {
+    transform: translate3d(20%, 0, 0);
+}
+
+
+.conclusion-section.story-section--active:has(.conclusion-transport-list__item--walkers.is-fully-in-view) .conclusion-transport-list__item--walkers.is-fully-in-view {
+    transform: translate3d(5%, 0, 0);
+}
+
+.conclusion-section.story-section--active .conclusion-transport-list__item--walkers.is-fully-in-view {
+    transform: translate3d(15%, 0, 0);
+}
+
+
+.conclusion-transport-usage__badge {
+    opacity: 0;
+    scale: 1 0;
+    transition: all 400ms cubic-bezier(.43, -0.31, .74, 1.43);
+}
+
+
+.conclusion-section.story-section--active .conclusion-transport-list__item--tram .conclusion-transport-usage__badge,
+.conclusion-section.story-section--active .conclusion-transport-list__item--car .conclusion-transport-usage__badge,
+.conclusion-section.story-section--active .conclusion-transport-list__item--bike.is-fully-in-view .conclusion-transport-usage__badge,
+.conclusion-section.story-section--active .conclusion-transport-list__item--walkers.is-fully-in-view .conclusion-transport-usage__badge {
+    opacity: 1;
+    scale: 1 1;
+}
+
+.conclusion-section.story-section--active .conclusion-transport-list__item--car .conclusion-transport-usage__badge,
+.conclusion-section.story-section--active .conclusion-transport-list__item--walkers.is-fully-in-view .conclusion-transport-usage__badge {
+    transition-delay: 500ms;
+}

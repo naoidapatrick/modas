@@ -1,0 +1,37 @@
+:root {
+  --font-family-base: 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
+  --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --font-family-display: 'Bedstead', var(--font-family-base);
+  --font-family-pixel: 'Pixelfy Sans', var(--font-family-display);
+
+  --taupe-light: #c6ad9e;
+  --peach: #FBBA72;
+  --sand: #FBBA72;
+  --yellow: #ffb703;
+
+  --orange-light: #ff6945;
+  --orange-soft: #ff9d38;
+  --orange: #fb8500;
+  --orange-dark: #DD4B1A;
+
+  --red-light: #fa5457;
+  --red: #f03235;
+
+  --green: #5CCF2B;
+  --mint: #a8dadc;
+
+  --blue-light: #48cae4;
+  --blue: #3091cf;
+  --blue-dark: #456990;
+
+  --black: #000000;
+
+  --color-text: #1d2939;
+  --color-text-muted: #475467;
+  --color-accent: var(--orange-dark);
+  --color-card-border: rgba(29, 41, 57, 0.08);
+  --color-card-bg: rgba(255, 255, 255, 0.72);
+  --color-code-bg: var(--peach);
+  --color-code-text: var(--orange-dark);
+
+}
