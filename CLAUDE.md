@@ -6,7 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 MoDaS (Mobility Data Story Suite) transforms CSV mobility data into interactive scrollytelling visualizations. It is a hybrid Python/JavaScript app: a **Streamlit** backend that handles file upload, template selection, and column mapping, and a **Vue 3 + Vite** frontend rendered inside Streamlit as a custom component.
 
-## Running the app
+- **Live app:** https://modas-suite.streamlit.app
+- **GitHub repo (fork):** https://github.com/naoidapatrick/modas
+- **Original upstream:** https://github.com/fluxguide/modas
+- **Hosted on:** Streamlit Community Cloud (free tier)
+
+## Local development
 
 Two servers must run simultaneously:
 
@@ -20,6 +25,8 @@ npm run dev
 ```
 
 App is served at `http://localhost:8501`. The Vite dev server runs on port 5173 and is consumed by Streamlit via the `story_viewer` component declared in `components/__init__.py`.
+
+**Before running locally:** set `_RELEASE = False` in `components/__init__.py` so Streamlit points to the Vite dev server instead of `dist/`. Do not commit that change.
 
 ## Setup
 
@@ -35,13 +42,13 @@ npm install
 ### Data flow
 
 1. **`app.py`** — home page; user uploads a CSV. Data is parsed, normalized (columns lowercased), and stored in `st.session_state.data` as a list of dicts. A `columnLabelMap` (normalized_key → original header) is also saved to session state.
-2. **`pages/template_selection.py`** — shows template cards and calls `score_templates()` from `shared.py` to auto-recommend a template based on column names.
+2. **`pages/template_selection.py`** — shows template cards (using `st.image` + `st.button` in columns) and calls `score_templates()` from `shared.py` to auto-recommend a template based on column names.
 3. **`pages/column_mapping.py`** — lets users remap CSV columns to template-expected field names. The `TEMPLATE_COLUMN_REQUIREMENTS` dict in `shared.py` defines required fields per template.
 4. **`pages/simulation_mode.py`** — renders the selected story via the `story_viewer()` custom component, passing `template`, `data`, `columnLabelMap`, and `categoryColours`.
 
 ### Streamlit ↔ Vue bridge
 
-`components/__init__.py` declares the Streamlit custom component. In development (`_RELEASE = False`) it points to `http://localhost:5173`; in production it serves from the `dist/` build. `App.vue` listens for `Streamlit.RENDER_EVENT` to receive `args` (data, template, mode, columnLabelMap, categoryColours) and routes to the correct story component.
+`components/__init__.py` declares the Streamlit custom component. In development (`_RELEASE = False`) it points to `http://localhost:5173`; in production (`_RELEASE = True`) it serves from `dist/`. The `dist/` path resolves to `../dist` relative to `components/` — one level up, at the project root. `App.vue` listens for `Streamlit.RENDER_EVENT` to receive `args` (data, template, mode, columnLabelMap, categoryColours) and routes to the correct story component.
 
 ### Vue frontend structure
 
@@ -81,28 +88,35 @@ Global CSS is split across `styles/` (variables, reset, typography, global_style
 
 ## Production build
 
-`_RELEASE = True` is already set in `components/__init__.py`. Build the Vue frontend with:
+`_RELEASE = True` is set in `components/__init__.py`. Build the Vue frontend with:
 
 ```bash
 npm run build   # outputs to dist/
 ```
 
-Streamlit then serves assets from `dist/` instead of the Vite dev server. In local dev, flip `_RELEASE = False` temporarily so it points to the Vite dev server on port 5173.
+The `dist/` folder is committed to git — Streamlit Community Cloud has no build step, so the built assets must be in the repo.
 
-## Deployment (Streamlit Community Cloud — free)
+## Deployment (Streamlit Community Cloud — free, push-to-deploy)
 
-**Push-to-deploy is configured.** The flow on every push to `main`:
-1. `.github/workflows/build.yml` runs `npm ci && npm run build`
-2. The Action commits the updated `dist/` folder back to `main` with `[skip ci]` to avoid looping
+**Push to `main` → auto-redeploy.** The flow:
+1. `.github/workflows/build.yml` triggers on every push to `main`
+2. It runs `npm ci && npm run build`, then commits the updated `dist/` back to `main` with `[skip ci]`
 3. Streamlit Community Cloud detects the new commit and redeploys automatically
 
-**One-time setup** (already done in code, just needs the hosting side):
-1. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub
-2. Click **New app** → select the repo → set branch to `main` → set main file to `app.py`
-3. Deploy — done
+**If you only changed Python files:** the Action short-circuits — `git diff --staged --quiet` skips the commit if `dist/` didn't change.
 
-After that, pushing any code change to `main` triggers the full rebuild and redeploy with no manual steps.
+**If the GitHub Action fails or dist/ gets out of sync**, build and push manually:
+```bash
+npm run build
+git add dist/
+git commit -m "chore: rebuild dist"
+git push
+```
 
-**If you changed only Python files:** the Action still runs but `git diff --staged --quiet` short-circuits the commit if `dist/` didn't change — no unnecessary commits.
+**Streamlit Cloud dashboard:** https://share.streamlit.io (sign in with GitHub account `naoidapatrick`)
 
-**Local dev reminder:** set `_RELEASE = False` in `components/__init__.py` while developing (don't commit that change).
+## Known issues fixed during setup
+
+- `st_clickable_images` (v0.0.3) is incompatible with current Streamlit Cloud — replaced with native `st.image` + `st.button` in `pages/template_selection.py`. Do not re-add that package.
+- The `dist/` path in `components/__init__.py` must be `../dist` (one level up from `components/`), not `../../dist`.
+- GIF previews in the template dialog use `st.image()` with local file paths (not `unsafe_allow_html` `<img>` tags) to avoid load failures on large files.
