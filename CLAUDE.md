@@ -10,6 +10,9 @@ MoDaS (Mobility Data Story Suite) transforms CSV mobility data into interactive 
 - **GitHub repo (fork):** https://github.com/naoidapatrick/modas
 - **Original upstream:** https://github.com/fluxguide/modas
 - **Hosted on:** Streamlit Community Cloud (free tier)
+- **Streamlit Cloud dashboard:** https://share.streamlit.io (GitHub account: `naoidapatrick`)
+
+---
 
 ## Local development
 
@@ -24,7 +27,7 @@ streamlit run app.py
 npm run dev
 ```
 
-App is served at `http://localhost:8501`. The Vite dev server runs on port 5173 and is consumed by Streamlit via the `story_viewer` component declared in `components/__init__.py`.
+App is served at `http://localhost:8501`. The Vite dev server runs on port 5173 and is consumed by Streamlit via the `story_viewer` component in `components/__init__.py`.
 
 **Before running locally:** set `_RELEASE = False` in `components/__init__.py` so Streamlit points to the Vite dev server instead of `dist/`. Do not commit that change.
 
@@ -36,6 +39,8 @@ source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 npm install
 ```
+
+---
 
 ## Architecture
 
@@ -86,26 +91,48 @@ The `simulation_mode.py` page listens for a `{"action": "open_data_editor"}` ret
 
 Global CSS is split across `styles/` (variables, reset, typography, global_styles). `style.css` in the root is loaded by Streamlit pages via `shared.setup_page()`. CSS custom properties are used for Streamlit file uploader label overrides injected via `:root` vars.
 
+---
+
 ## Production build
 
-`_RELEASE = True` is set in `components/__init__.py`. Build the Vue frontend with:
+`_RELEASE = True` is set in `components/__init__.py`. The build script in `package.json` runs:
 
 ```bash
-npm run build   # outputs to dist/
+npm run build   # vite build + cp -r static dist/static
 ```
 
-The `dist/` folder is committed to git — Streamlit Community Cloud has no build step, so the built assets must be in the repo.
+Two things happen:
+1. Vite bundles all imported JS/CSS/assets into `dist/assets/` with hashed filenames.
+2. The entire `static/` folder is copied to `dist/static/` so the Vue component can serve dynamically-referenced images (SVGs referenced via string paths, not imports, are not bundled by Vite).
 
-## Deployment (Streamlit Community Cloud — free, push-to-deploy)
+The `dist/` folder is committed to git — Streamlit Community Cloud has no build step, so built assets must be in the repo.
 
-**Push to `main` → auto-redeploy.** The flow:
-1. `.github/workflows/build.yml` triggers on every push to `main`
-2. It runs `npm ci && npm run build`, then commits the updated `dist/` back to `main` with `[skip ci]`
-3. Streamlit Community Cloud detects the new commit and redeploys automatically
+---
 
-**If you only changed Python files:** the Action short-circuits — `git diff --staged --quiet` skips the commit if `dist/` didn't change.
+## Deployment — how it works end to end
 
-**If the GitHub Action fails or dist/ gets out of sync**, build and push manually:
+### Infrastructure
+
+| Layer | What it does |
+|---|---|
+| GitHub (`naoidapatrick/modas`, branch `main`) | Source of truth — Streamlit Cloud watches this branch |
+| GitHub Actions (`.github/workflows/build.yml`) | Builds the Vue frontend and commits `dist/` on every push |
+| Streamlit Community Cloud | Clones the repo, installs `requirements.txt`, runs `streamlit run app.py` |
+
+### Push-to-deploy flow
+
+1. You push any change to `main`
+2. GitHub Action triggers: runs `npm ci && npm run build` (which includes copying `static/` to `dist/static/`)
+3. Action commits the updated `dist/` back to `main` with message `chore: rebuild dist [skip ci]` — the `[skip ci]` prevents an infinite loop
+4. If `dist/` didn't change (Python-only changes), the commit is skipped automatically
+5. Streamlit Community Cloud detects the new commit and redeploys — usually within 1–2 minutes
+
+### GitHub Action permissions
+
+The Action needs `permissions: contents: write` to push the `dist/` commit back to the repo. This is set at the top of `.github/workflows/build.yml`. Without it the push fails with a 403.
+
+### Manual build (if Action fails or dist/ is out of sync)
+
 ```bash
 npm run build
 git add dist/
@@ -113,10 +140,23 @@ git commit -m "chore: rebuild dist"
 git push
 ```
 
-**Streamlit Cloud dashboard:** https://share.streamlit.io (sign in with GitHub account `naoidapatrick`)
+---
+
+## Normal log noise — nothing to worry about
+
+These appear in Streamlit Cloud logs and are all benign:
+
+- **`Please replace use_container_width with width`** — Streamlit 1.54.0 deprecation warning. Spammy but harmless. If it bothers you, replace `use_container_width=True` with `width='stretch'` everywhere.
+- **`MediaFileHandler: Missing file ...`** — happens for a few seconds after every redeploy. Streamlit's in-memory image cache is invalidated; users see broken images until they refresh. Clears itself.
+- **`Blocked a frame with origin ... gjmnz4vd2y07.statuspage.io`** — Streamlit Cloud loads its own status page in an internal iframe. Browser cross-origin policy blocks it. Nothing to do with this app.
+- **`WebSocket connection failed: network connection was lost`** — happens briefly after a redeploy while browsers reconnect. Auto-recovers.
+
+---
 
 ## Known issues fixed during setup
 
-- `st_clickable_images` (v0.0.3) is incompatible with current Streamlit Cloud — replaced with native `st.image` + `st.button` in `pages/template_selection.py`. Do not re-add that package.
-- The `dist/` path in `components/__init__.py` must be `../dist` (one level up from `components/`), not `../../dist`.
-- GIF previews in the template dialog use `st.image()` with local file paths (not `unsafe_allow_html` `<img>` tags) to avoid load failures on large files.
+- **`st_clickable_images` (v0.0.3)** is incompatible with current Streamlit Cloud — replaced with native `st.image` + `st.button` in `pages/template_selection.py`. Do not re-add that package.
+- **`dist/` path** in `components/__init__.py` must be `../dist` (one level up from `components/`), not `../../dist`. The wrong path resolves to `/mount/src/dist` on Streamlit Cloud instead of `/mount/src/modas/dist`.
+- **`static/` assets** must be copied into `dist/static/` at build time. SVGs referenced via dynamic string paths in Vue are not bundled by Vite and must be physically present in the component's `path` directory.
+- **GIF previews** in the template dialog use `st.image()` with local file paths, not `unsafe_allow_html` `<img>` tags — large GIFs (20–42 MB) fail to load via HTML injection.
+- **GitHub Action 403** — the workflow needs `permissions: contents: write` to push commits back. Without it, the build succeeds but the `git push` is rejected.
